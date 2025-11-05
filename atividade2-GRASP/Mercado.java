@@ -1,7 +1,7 @@
 /**
  * CLASSE CLIENTE (MAIN)
  * * Simula o "Mercado" utilizando o sistema de Vendas.
- * * Demonstra o BAIXO ACOPLAMENTO.
+ * * Demonstra o BAIXO ACOPLAMENTO
  */
 public class Mercado {
 
