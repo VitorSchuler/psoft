@@ -1,0 +1,82 @@
+classDiagram
+    direction LR
+
+    %% O CONTEXTO
+    class ContextoDeOrdenacao {
+        - estrategia: OrdenacaoStrategy
+        + ContextoDeOrdenacao()
+        + setEstrategia(novaEstrategia: OrdenacaoStrategy)
+        + ordenarLista(lista: List~Integer~) : List~Integer~
+    }
+
+    %% A INTERFACE (STRATEGY)
+    class OrdenacaoStrategy {
+        <<interface>>
+        + ordena(elementos: List~Integer~) : List~Integer~
+    }
+
+    %% AS ESTRATÉGIAS CONCRETAS
+    class BubbleSort {
+        + ordena(elementos: List~Integer~) : List~Integer~
+    }
+    class InsertionSort {
+        + ordena(elementos: List~Integer~) : List~Integer~
+    }
+    class MergeSort {
+        + ordena(elementos: List~Integer~) : List~Integer~
+    }
+    class QuickSort {
+        + ordena(elementos: List~Integer~) : List~Integer~
+    }
+
+    %% RELACIONAMENTOS
+    %% 1. Agregação (Contexto TEM-UMA Estratégia)
+    ContextoDeOrdenacao o-- "1" OrdenacaoStrategy : tem-uma
+
+    %% 2. Realização/Implementação (Concretas IMPLEMENTAM a Interface)
+    OrdenacaoStrategy <|.. BubbleSort : implementa
+    OrdenacaoStrategy <|.. InsertionSort : implementa
+    OrdenacaoStrategy <|.. MergeSort : implementa
+    OrdenacaoStrategy <|.. QuickSort : implementa
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+📝 Dicas para desenhar no papel (Para ganhar a nota máxima)
+
+    A Interface (OrdenacaoStrategy):
+
+        Não esqueça de escrever <<interface>> em cima do nome da classe.
+
+        O nome da classe/interface deve estar em itálico (ou sublinhado, se o professor preferir) para indicar que é abstrato,
+        mas o <<interface>> já costuma bastar.
+
+    A Seta de Implementação (<|..):
+
+        Use uma linha tracejada (pontilhada).
+
+        Use um triângulo vazio (oco) na ponta, apontando para a Interface.
+
+        Isso significa: "BubbleSort assina o contrato de OrdenacaoStrategy".
+
+    A Seta de Agregação (o--):
+
+        Use uma linha sólida.
+
+        Use um losango vazio (branco) encostado na classe ContextoDeOrdenacao.
+
+        Isso significa: "O Contexto TEM UMA estratégia, mas a estratégia pode existir fora dele (pode ser trocada)".
+
+        Nota: Se quiser ser muito rigoroso com o fato de que o Contexto cria o BubbleSort no construtor, poderia ser um 
+        losango cheio (Composição), mas o losango vazio (Agregação) é o padrão clássico para representar o Strategy, pois a 
+        ideia é que a estratégia é "plugável".
+
+    Visibilidade:
+
+        Use - para atributos privados (ex: - estrategia).
+
+        Use + para métodos públicos (ex: + ordena()).
+
+    Assinaturas:
+
+        Coloque os tipos dos parâmetros e retorno: ordena(lista: List<Integer>) : List<Integer>. Isso mostra que você entende a tipagem forte do Java.
+
