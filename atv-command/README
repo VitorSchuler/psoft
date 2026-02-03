@@ -1,0 +1,51 @@
+classDiagram
+    direction BT
+
+    %% Receiver (Quem faz o trabalho)
+    class Documento {
+        - List~String~ paragrafos
+        + adicionarParagrafo(String texto)
+        + removerParagrafo(String texto)
+        + imprimir()
+    }
+
+    %% Interface Command (O Contrato)
+    class Command {
+        <<interface>>
+        + execute()
+        + undo()
+    }
+
+    %% Concrete Commands (As Ações Específicas)
+    class AdicionarParagrafoCommand {
+        - Documento documento
+        - String texto
+        + execute()
+        + undo()
+    }
+
+    class ImprimirCommand {
+        - Documento documento
+        + execute()
+        + undo()
+    }
+
+    %% Invoker (Quem gerencia o histórico e dispara ações)
+    class EditorInvoker {
+        - Stack~Command~ historico
+        + executar(Command comando)
+        + desfazer()
+    }
+
+    %% RELACIONAMENTOS
+
+    %% 1. Implementação (Linha tracejada com triângulo vazio)
+    AdicionarParagrafoCommand ..|> Command : implements
+    ImprimirCommand ..|> Command : implements
+
+    %% 2. Agregação (Invoker tem uma lista de Comandos)
+    EditorInvoker o--> Command : histórico
+
+    %% 3. Associação (Comando conhece quem vai executar/Receiver)
+    AdicionarParagrafoCommand --> Documento : manipula
+    ImprimirCommand --> Documento : lê
