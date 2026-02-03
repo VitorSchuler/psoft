@@ -1,0 +1,58 @@
+classDiagram
+    direction TB
+
+    %% Contexto
+    class UserStory {
+        - State estadoAtual
+        - String descricao
+        + UserStory(String descricao)
+        + setEstado(State novoEstado)
+        + mover(User user, boolean aprovar)
+        + mover(User user)
+    }
+
+    %% Classe Auxiliar (Ator)
+    class User {
+        - String nome
+        - String cargo
+        + getCargo() String
+        + getNome() String
+    }
+
+    %% Interface State
+    class State {
+        <<interface>>
+        + mover(UserStory us, User user, boolean aprovar)
+    }
+
+    %% Estados Concretos
+    class ToDo {
+        + mover(UserStory us, User user, boolean aprovar)
+    }
+
+    class InProgress {
+        + mover(UserStory us, User user, boolean aprovar)
+    }
+
+    class ToVerify {
+        + mover(UserStory us, User user, boolean aprovar)
+    }
+
+    class Done {
+        + mover(UserStory us, User user, boolean aprovar)
+    }
+
+    %% RELACIONAMENTOS
+
+    %% 1. Contexto tem um Estado (Composição/Agregação)
+    UserStory o--> State : estadoAtual
+
+    %% 2. Implementação da Interface
+    ToDo ..|> State : implements
+    InProgress ..|> State : implements
+    ToVerify ..|> State : implements
+    Done ..|> State : implements
+
+    %% 3. Dependência (Os estados manipulam a US e leem o User)
+    State ..> UserStory : manipula
+    State ..> User : verifica permissão
