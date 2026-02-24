@@ -1,0 +1,74 @@
+# Atividade 7 - Padrão Observer: Alertas de Produtos 🛒
+
+Implementação do Padrão de Projeto **Observer** para um sistema de alertas em um site de vendas online. 
+
+## 📌 Descrição da Solução
+A arquitetura foi desenhada para permitir que usuários se inscrevam em produtos específicos (`Source`) para receberem alertas (`Listeners`) quando o estado do produto mudar.
+
+Existem dois tipos principais de eventos suportados:
+1. **Disponibilidade:** Notifica o usuário e envia o link do produto.
+2. **Promoção:** Notifica o usuário, envia o link e disponibiliza um código promocional.
+
+Fizemos o uso de um `AlertaAdapter` para evitar que os alertas implementem métodos irrelevantes para eles (ex: um alerta exclusivo de promoção não precisa implementar o método de notificação de disponibilidade).
+
+## 🏗️ Diagrama UML de Classes
+
+Abaixo está o mapeamento UML das classes do sistema, demonstrando as relações de implementação, herança e associação.
+
+```mermaid
+classDiagram
+    class Produto {
+        -String nome
+        -String link
+        -boolean disponivel
+        -List~AlertaListener~ alertas
+        +adicionarAlerta(AlertaListener)
+        +removerAlerta(AlertaListener)
+        +setDisponivel(boolean)
+        +aplicarPromocao(String)
+        -dispararDisponibilidade()
+        -dispararPromocao(String)
+    }
+
+    class AlertaListener {
+        <<interface>>
+        +naDisponibilidade(ProdutoEvent)
+        +naPromocao(ProdutoEvent)
+    }
+
+    class AlertaAdapter {
+        <<abstract>>
+        +naDisponibilidade(ProdutoEvent)
+        +naPromocao(ProdutoEvent)
+    }
+
+    class AlertaDisponibilidade {
+        -Usuario usuario
+        +naDisponibilidade(ProdutoEvent)
+    }
+
+    class AlertaPromocao {
+        -Usuario usuario
+        +naPromocao(ProdutoEvent)
+    }
+
+    class ProdutoEvent {
+        -Produto produto
+        -String codigoPromocional
+        +getProduto()
+        +getCodigoPromocional()
+    }
+
+    class Usuario {
+        -String nome
+        +getNome()
+    }
+
+    Produto --> AlertaListener : notifica >
+    Produto --> ProdutoEvent : cria >
+    AlertaListener <|.. AlertaAdapter : implementa
+    AlertaAdapter <|-- AlertaDisponibilidade : herda
+    AlertaAdapter <|-- AlertaPromocao : herda
+    AlertaDisponibilidade --> Usuario : pertence a >
+    AlertaPromocao --> Usuario : pertence a >
+    ProdutoEvent --> Produto : contém >
