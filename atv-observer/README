@@ -1,0 +1,93 @@
+# Sistema de Exibição de Voos (Padrão Observer) ✈️
+
+Este projeto implementa um sistema de exibição de voos para totens de aeroportos, desenvolvido como exercício prático de Padrões de Projeto (Observer).
+
+## 📌 Problema Resolvido
+O sistema central do aeroporto (`SistemaVoos`) precisa notificar diversos totens espalhados pelo aeroporto sempre que um voo é:
+1. Adicionado
+2. Atualizado
+3. Removido
+
+Diferentes totens têm diferentes interesses (ex: O totem de Embarque só exibe voos que estão partindo, enquanto o de Desembarque só exibe voos chegando).
+
+## 🏗️ Arquitetura (Diagrama UML)
+
+O projeto segue rigorosamente o padrão comportamental **Observer**.
+
+```mermaid
+classDiagram
+    class SistemaVoos {
+        -List~TotemListener~ listeners
+        -List~Voo~ voos
+        +addListener(TotemListener)
+        +removeListener(TotemListener)
+        +adicionarVoo(Voo)
+        +atualizarVoo(Voo)
+        +removerVoo(Voo)
+        -dispararVooAdicionado()
+        -dispararVooAtualizado()
+        -dispararVooRemovido()
+    }
+
+    class TotemListener {
+        <<interface>>
+        +vooAdicionado(VooEvent)
+        +vooAtualizado(VooEvent)
+        +vooRemovido(VooEvent)
+    }
+
+    class TotemAdapter {
+        <<abstract>>
+        +vooAdicionado(VooEvent)
+        +vooAtualizado(VooEvent)
+        +vooRemovido(VooEvent)
+    }
+
+    class TotemEmbarque {
+        +vooAdicionado(VooEvent)
+        +vooAtualizado(VooEvent)
+        +vooRemovido(VooEvent)
+    }
+
+    class TotemDesembarque {
+        +vooAdicionado(VooEvent)
+        +vooAtualizado(VooEvent)
+        +vooRemovido(VooEvent)
+    }
+
+    class VooEvent {
+        -Voo voo
+        +getVoo()
+    }
+
+    class Voo {
+        -String numero
+        -String empresa
+        -TipoVoo tipoVoo
+        -LocalDateTime horario
+    }
+
+    SistemaVoos --> TotemListener : notifica >
+    SistemaVoos --> VooEvent : cria >
+    TotemListener <|.. TotemAdapter : implementa
+    TotemAdapter <|-- TotemEmbarque : herda
+    TotemAdapter <|-- TotemDesembarque : herda
+    VooEvent --> Voo : contém >
+
+
+    ## 📐 Entendendo os Relacionamentos do Diagrama UML
+
+[cite_start]Para desenhar ou interpretar a arquitetura do Padrão Observer neste projeto[cite: 508], utilizamos quatro tipos principais de setas UML. Cada uma representa uma relação diferente entre as classes:
+
+* **Implementação (Linha tracejada com seta vazada):**
+    * **Onde usar:** Do `TotemAdapter` apontando para a interface `TotemListener`.
+    * **Significado:** Indica que a classe abstrata se compromete a implementar os métodos definidos pela interface.
+* **Herança / Generalização (Linha contínua com seta vazada):**
+    * [cite_start]**Onde usar:** Dos totens concretos (`TotemEmbarque` e `TotemDesembarque`) apontando para o `TotemAdapter`[cite: 526, 528, 530].
+    * **Significado:** Indica que as classes filhas herdam o comportamento da classe pai (reaproveitando os métodos vazios do Adapter).
+* **Associação Direcionada (Linha contínua com seta aberta):**
+    * [cite_start]**Onde usar:** Do `SistemaVoos` (Source) apontando para o `TotemListener`[cite: 516].
+    * **Significado:** Mostra que o sistema central "tem" ou "conhece" uma lista de observadores. É uma relação estrutural contínua.
+* **Dependência (Linha tracejada com seta aberta):**
+    * [cite_start]**Onde usar:** Do `SistemaVoos` apontando para o `VooEvent`[cite: 512].
+    * **Significado:** Indica que o sistema central apenas "usa" ou "cria" o evento temporariamente para enviar aos totens, mas não guarda essa informação como um atributo permanente.
