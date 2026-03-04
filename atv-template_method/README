@@ -1,0 +1,22 @@
+classDiagram
+    class Bebida {
+        <<abstract>>
+        +preparar() : void
+        -esquentarAgua() : void
+        -servirEmUmCopo() : void
+        #prepararIngrediente()* : void
+        #adicionarCondimentos()* : void
+    }
+
+    class Cafe {
+        #prepararIngrediente() : void
+        #adicionarCondimentos() : void
+    }
+
+    class Cha {
+        #prepararIngrediente() : void
+        #adicionarCondimentos() : void
+    }
+
+    Bebida <|-- Cafe : Herda (extends)
+    Bebida <|-- Cha : Herda (extends)
