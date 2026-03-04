@@ -20,3 +20,45 @@ classDiagram
 
     Bebida <|-- Cafe : Herda (extends)
     Bebida <|-- Cha : Herda (extends)
+
+
+
+
+Classes:
+    As Classes do Padrão Genérico (A Estrutura Teórica)
+AbstractClass (A Superclasse / Molde): É o coração do padrão. Ela é uma classe abstrata responsável por ditar as regras do jogo. Dentro dela, existem três tipos de métodos:
+O Template Method: É o método principal que define o esqueleto do algoritmo. Ele costuma ter a visibilidade bloqueada com public final, garantindo que nenhuma classe filha consiga bagunçar a ordem das etapas.
+
+
+Métodos Invariantes: São os métodos comuns (já implementados na superclasse) que não mudam de uma classe para outra.
+Métodos Gancho (Hooks): São métodos abstratos (geralmente protected) que funcionam como "buracos" no meio do algoritmo.
+
+
+ConcreteClass (As Subclasses Concretas): São as classes que herdam da AbstractClass. Elas têm uma única missão: implementar e dar vida aos métodos "gancho". Elas preenchem as lacunas do algoritmo sem precisar (e sem poder) alterar a estrutura principal do fluxo.
+
+
+
+Fast:
+Resumo Rápido (Visão Geral)
+Problema: Um algoritmo tem um esqueleto fixo, mas algumas etapas internas precisam mudar de acordo com o contexto.
+Solução: Colocar o fluxo principal em um método bloqueado (final) dentro de uma classe abstrata, e forçar as classes filhas a implementarem apenas os buracos em branco (ganchos abstratos).
+Palavra-chave: Inversão de Controle. Em vez de você escrever a regra do zero e chamar as etapas comuns, você apenas preenche o que falta e o método principal (da superclasse) faz o trabalho de orquestrar tudo.
+
+
+Detailed:
+Resumo Detalhado (Visão Estrutural e Consequências)
+Conceito Central: O padrão define o esqueleto de um algoritmo dentro de um método na superclasse, permitindo que as subclasses completem apenas etapas específicas.
+Estrutura de Implementação: * A superclasse implementa as partes invariantes do algoritmo uma única vez, evitando repetição de código.
+O método que dita o fluxo do algoritmo (método template) não pode ser sobrescrito, devendo utilizar o modificador public final.
+O comportamento variável é delegado para métodos abstratos chamados de "ganchos".
+Os métodos ganchos devem ser sobrescritos pelas subclasses e devem manter a visibilidade protected.
+Vantagens (Consequências Positivas):
+Promove altíssimo reuso de código.
+Causa uma "Inversão de Controle" (Princípio de Hollywood: "Não nos ligue, nós ligamos para você"): a subclasse não chama a superclasse; é a superclasse que dita o fluxo e chama a implementação da subclasse através do gancho.
+Desvantagens (Consequências Negativas):
+Aumenta a complexidade do código e dificulta a leitura do fluxo do programa.
+Gera um forte acoplamento entre a superclasse (Classe Template) e suas subclasses.
+O padrão sofre com "explosão de subclasses" se houver variação em mais de uma dimensão (ex: mudar o imposto e mudar o imposto por estado do cliente). Nesses casos, o padrão Strategy seria uma alternativa melhor.
+
+
+
